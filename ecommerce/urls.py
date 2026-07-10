@@ -32,6 +32,8 @@ urlpatterns = [
 
     # Cart App
     path('cart/', include('cart.urls')),
+
+    path('orders/', include('orders.urls')),
 ]
 
 # Media Files

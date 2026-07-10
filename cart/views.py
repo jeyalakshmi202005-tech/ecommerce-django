@@ -47,11 +47,23 @@ def remove(request,id):
     item=get_object_or_404(Cart,id=id)
     item.delete()
     return redirect("cart")
+from django.shortcuts import redirect, render
 from django.contrib import messages
+from .models import Cart
+from orders.models import Order
 
 def checkout(request):
-    Cart.objects.all().delete()
+    cart_items = Cart.objects.all()
+
+    for item in cart_items:
+        Order.objects.create(
+            product=item.product,
+            quantity=item.quantity,
+            total_price=item.product.price * item.quantity
+        )
+
+    cart_items.delete()
 
     messages.success(request, "🎉 Order Successfully Placed!")
 
-    return redirect("products")
+    return render(request, "success.html")
